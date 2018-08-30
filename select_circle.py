@@ -25,9 +25,8 @@ class App(tk.Frame):
         self.create_widgets()
 
     def create_widgets(self):
-        self.canvas = Canvas(self, width=400, height=400)
+        self.canvas = Canvas(self, width=512, height=512)
         self.canvas.grid()
-
         self.btn_quit = tk.Button(self, text="Quit", command=self.quit)
         self.btn_quit.grid()
 
@@ -43,14 +42,28 @@ class Canvas(tk.Canvas):
         self.circle = None
         self.p_click = None
         self.bbox_click = None
+        self.background = None
+
+
+    def set_background(self, image):
+        # Take a tk.PhotoImage and draw it behind everything else.
+        if self.background is not None:
+            self.delete(self.background)
+        iw = image.width()
+        ih = image.height()
+        self.background = self.create_image((iw//2, ih//2), image=image)
+        self.tag_lower(self.background, None)
+
 
     def on_release(self, event):
         self.p_click = None
         self.bbox_click = None
 
+
     def on_click(self, event):
         if self.circle == None:
             self.circle = self .create_oval((event.x-1, event.y-1, event.x+1, event.y+1))
+
 
     def circle_resize(self, event):
         if self.circle is None:
